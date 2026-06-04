@@ -1,61 +1,83 @@
 <?php
-require_once('../connection.php');
-// retrieving candidate(s) results based on position
-if (isset($_POST['Submit'])){   
+    session_start();
+    require_once('../connection.php');
 
-  $position = addslashes( $_POST['position'] );
-  
-    $results = $mysqli->query("SELECT * FROM tbCandidates where candidate_position='$position'");
+    //If your session isn't valid, it returns you to the login screen for protection
+    if(empty($_SESSION['admin_id'])){
+        header("location:access-denied.php");
+        exit;
+    }
 
-    $row1 = mysqli_fetch_array($results); // for the first candidate
-    $row2 = mysqli_fetch_array($results); // for the second candidate
-      if ($row1){
-      $candidate_name_1=$row1['candidate_name']; // first candidate name
-      $candidate_1=$row1['candidate_cvotes']; // first candidate votes
-      }
+    // Initialize variables to avoid "undefined variable" notices
+    $candidate_name_1 = "";
+    $candidate_1 = 0;
+    $candidate_name_2 = "";
+    $candidate_2 = 0;
+    $totalvotes = 0;
+    $percent_1 = 0;
+    $percent_2 = 0;
+    $bar_width_1 = 0;
+    $bar_width_2 = 0;
 
-      if ($row2){
-      $candidate_name_2=$row2['candidate_name']; // second candidate name
-      $candidate_2=$row2['candidate_cvotes']; // second candidate votes
-      }
-}
-    else
-        // do nothing
-?> 
-<?php
-// retrieving positions sql query
-$positions= $mysqli->query("SELECT * FROM tbPositions")
-or die("There are no records to display ... \n" . mysqli_error()); 
+    // Processing Logic
+    if (isset($_POST['Submit']) && $_POST['position'] != 'select'){
+        $position_name = $_POST['position'];
+
+        // Secure query using Prepared Statements
+        // We ORDER BY candidate_id to ensure Candidate 1 is always the same person
+        $stmt = $mysqli->prepare("SELECT candidate_name, candidate_cvotes FROM tbcandidates WHERE candidate_position = ? ORDER BY candidate_id ASC");
+        $stmt->bind_param("s", $position_name);
+        $stmt->execute();
+        $result = $stmt->get_result(); 
+
+        // Fetch data for the first two candidates (Original functionality)
+        $row1 = $result->fetch_assoc();
+        $row2 = $result->fetch_assoc();
+
+        if ($row1) {
+            $candidate_name_1 = $row1['candidate_name'];
+            $candidate_1 = (int)$row1['candidate_cvotes'];
+        }
+
+        if ($row2) {
+            $candidate_name_2 = $row2['candidate_name'];
+            $candidate_2 = (int)$row2['candidate_cvotes'];
+        }
+        $stmt->close();
+
+        // Calculations
+        $totalvotes = $candidate_1 + $candidate_2;
+        
+        if ($totalvotes > 0) {
+            $percent_1 = round(($candidate_1 / $totalvotes) * 100, 2);
+            $percent_2 = round(($candidate_2 / $totalvotes) * 100, 2);
+            
+            // Calculate bar width pixels (Assuming max width is around the base logic)
+            // The original code used the percentage as the width pixel value directly.
+            $bar_width_1 = $percent_1; 
+            $bar_width_2 = $percent_2;
+        }
+    }
+
+    // Retrieve positions for the dropdown
+    $positions = $mysqli->query("SELECT * FROM tbpositions");
+    if (!$positions) {
+        die("Error fetching : " . $mysqli->error);
+    }
 ?>
-<?php
-session_start();
-//If your session isn't valid, it returns you to the login screen for protection
-if(empty($_SESSION['admin_id'])){
- header("location:access-denied.php");
-}
-?>
-
-<?php if(isset($_POST['Submit'])){$totalvotes=$candidate_1+$candidate_2;} ?>
-
-
 <!DOCTYPE html>
-
 <html>
 <head>
 <title>online voting</title>
-
-
+<meta charset="utf-8">
 <link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
-
-<script language="JavaScript" src="js/admin.js">
-</script>
-
+<script language="JavaScript" src="js/admin.js"></script>
 </head>
+
 <body id="top">
 
 <div class="wrapper row0">
   <div id="topbar" class="hoc clear"> 
-  
     <div class="fl_left">
       <ul class="faico clear">
         <li><a class="faicon-facebook" href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
@@ -69,21 +91,18 @@ if(empty($_SESSION['admin_id'])){
     </div>
     <div class="fl_right">
       <ul class="nospace inline pushright">
-        <li><i class="fa fa-phone"></i> +8801773254014</li>
-        <li><i class="fa fa-envelope-o"></i> r.haque.249.rh@gmail.com </li>
+        <li><i class="fa fa-phone"></i> +251977325401</li>
+        <li><i class="fa fa-envelope-o"></i> gruop3@gmail.com </li>
       </ul>
     </div>
-   
   </div>
 </div>
 
 <div class="wrapper row1">
   <header id="header" class="hoc clear"> 
-    
     <div id="logo" class="fl_left">
       <h1><a href="index.html">ONLINE VOTING</a></h1>
     </div>
-    
     <nav id="mainav" class="fl_right">
       <ul class="clear">
         <li class="active"><a href="refresh.php">Home</a></li>
@@ -95,74 +114,74 @@ if(empty($_SESSION['admin_id'])){
             <li><a href="refresh.php">Results</a></li>
           </ul>
         </li>
-        
         <li><a href="http://localhost/online_voting/index.php">Voter Panel</a></li>
         <li><a href="logout.php">Logout</a></li>
-
       </ul>
     </nav>
-    
   </header>
 </div>
 
-<div >
- 
-  <div >
+<div>
+  <div>
     <table width="420" align="center">
-    <form name="fmNames" id="fmNames" method="post" action="refresh.php" onSubmit="return positionValidate(this)">
-    <tr>
-        <td style="color:#000000";>Choose Position</td>
-        <td><SELECT NAME="position" id="position">
-        <OPTION  VALUE="select"><p style="color:black";>select</p>
-        <?php 
-        //loop through all table rows
-        while ($row= mysqli_fetch_array($positions)){
-          echo "<OPTION VALUE=$row[position_name]>$row[position_name]"; 
-        }
-        ?>
-        </SELECT></td>
-        <td style="color:black";><input type="submit" name="Submit" value="See Results" /></td>
-    </tr>
-    <tr>
-     
-        
-    </tr>
-    </form> 
+      <form name="fmNames" id="fmNames" method="post" action="refresh.php" onSubmit="return positionValidate(this)">
+      <tr>
+        <td style="color:#000000;">Choose Position</td>
+        <td>
+          <SELECT NAME="position" id="position">
+            <OPTION VALUE="select">select</OPTION>
+            <?php 
+            // Loop through all table rows
+            while ($row = $positions->fetch_assoc()){
+              // Using htmlspecialchars for security
+              echo "<OPTION VALUE='" . htmlspecialchars($row['position_name']) . "'>" . htmlspecialchars($row['position_name']) . "</OPTION>"; 
+            }
+            ?>
+          </SELECT>
+        </td>
+        <td style="color:black;"><input type="submit" name="Submit" value="See Results" /></td>
+      </tr>
+      </form> 
     </table>
-    <?php if(isset($_POST['Submit'])){echo $candidate_name_1;} ?>:<br>
-    <img src="images/candidate-1.gif"
-    width='<?php if(isset($_POST['Submit'])){ if ($candidate_2 || $candidate_1 != 0){echo(100*round($candidate_1/($candidate_2+$candidate_1),2));}} ?>'
-    height='10'>
-    <?php if(isset($_POST['Submit'])){ if ($candidate_2 || $candidate_1 != 0){echo(100*round($candidate_1/($candidate_2+$candidate_1),2));}} ?>% of <?php if(isset($_POST['Submit'])){echo $totalvotes;} ?> total votes
-    <br>votes <?php if(isset($_POST['Submit'])){ echo $candidate_1;} ?>
-    <br>
-    <br>
-    <?php if(isset($_POST['Submit'])){ echo $candidate_name_2;} ?>:<br>
-    <img src="images/candidate-2.gif"
-    width='<?php if(isset($_POST['Submit'])){ if ($candidate_2 || $candidate_1 != 0){echo(100*round($candidate_2/($candidate_2+$candidate_1),2));}} ?>'
-    height='10'>
-    <?php if(isset($_POST['Submit'])){ if ($candidate_2 || $candidate_1 != 0){echo(100*round($candidate_2/($candidate_2+$candidate_1),2));}} ?>% of <?php if(isset($_POST['Submit'])){echo $totalvotes;} ?> total votes
-    <br>votes <?php if(isset($_POST['Submit'])){ echo $candidate_2;} ?>
+
+    <!-- Result Display Area -->
+    <?php if($totalvotes > 0 || isset($_POST['Submit'])): ?>
+    
+      <!-- Candidate 1 -->
+      <?php echo htmlspecialchars($candidate_name_1); ?>:<br>
+      <img src="images/candidate-1.gif"
+      width='<?php echo $bar_width_1; ?>'
+      height='10'>
+      <?php echo $percent_1; ?>% of <?php echo $totalvotes; ?> total votes
+      <br>votes <?php echo $candidate_1; ?>
+      
+      <br><br>
+      
+      <!-- Candidate 2 -->
+      <?php echo htmlspecialchars($candidate_name_2); ?>:<br>
+      <img src="images/candidate-2.gif"
+      width='<?php echo $bar_width_2; ?>'
+      height='10'>
+      <?php echo $percent_2; ?>% of <?php echo $totalvotes; ?> total votes
+      <br>votes <?php echo $candidate_2; ?>
+
+    <?php endif; ?>
   
   </div>
-
 </div>
-
 
 <div class="wrapper row4">
   <footer id="footer" class="hoc clear"> 
-   
     <div class="one_third first">
       <h6 class="title">Address</h6>
       <ul class="nospace linklist contact">
         <li><i class="fa fa-map-marker"></i>
           <address>
-         
           <p>
-          Name        : Md. Rezwanul Haque <br>
-          University  : KUET <br>
-          Batch       : 2k14 <br>
-          Dept        : CSE <br>
+          Name        : Group 3 <br>
+          University  : Debre Berhan <br>
+          Batch       : 3RD <br>
+          Dept        : IT <br>
           </p>
           </address>
         </li>
@@ -172,20 +191,15 @@ if(empty($_SESSION['admin_id'])){
     <div class="one_third">
       <h6 class="title">Phone</h6>
       <ul class="nospace linklist contact">
-       
-        <li><i class="fa fa-phone"></i> +8801773254014<br>
-          +8801521479574</li>
-
-
+        <li><i class="fa fa-phone"></i> +251977325401<br>
+          +251977325401</li>
       </ul>
     </div>
 
     <div class="one_third">
       <h6 class="title">Email</h6>
       <ul class="nospace linklist contact">
-        
-        <li><i class="fa fa-envelope-o"></i> r.haque.249.rh@gmail.com </li>
-
+        <li><i class="fa fa-envelope-o"></i>gruop3@gmail.com </li>
       </ul>
     </div>
 
@@ -194,14 +208,13 @@ if(empty($_SESSION['admin_id'])){
 
 <div class="wrapper row5">
   <div id="copyright" class="hoc clear"> 
-   
-    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="#">Md. Rezwanul Haque</a></p>
+    <p class="fl_left">Copyright &copy; 2026 - All Rights Reserved - <a href="#">Group 3</a></p>
     <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
-   
   </div>
 </div>
 
 <a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+
 <!-- JAVASCRIPTS -->
 <script src="layout/scripts/jquery.min.js"></script>
 <script src="layout/scripts/jquery.backtotop.js"></script>
@@ -211,4 +224,3 @@ if(empty($_SESSION['admin_id'])){
 <!-- / IE9 Placeholder Support -->
 </body>
 </html>
-

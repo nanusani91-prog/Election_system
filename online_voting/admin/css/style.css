@@ -23,10 +23,10 @@ body {
   font-size: 12px;
 }
 .pen-title span .fa {
-  color: #ed2553;
+  color: #685b5e;
 }
 .pen-title span a {
-  color: #ed2553;
+  color: #5f4e52;
   font-weight: 600;
   text-decoration: none;
 }
@@ -39,7 +39,7 @@ body {
 .rerun a {
   cursor: pointer;
   display: inline-block;
-  background: #ed2553;
+  background: #4d3c40;
   border-radius: 3px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   padding: 10px 20px;
@@ -78,7 +78,7 @@ body {
 #portfolio {
   bottom: 96px;
   right: 36px;
-  background: #ed2553;
+  background: #5f5759;
   width: 44px;
   height: 44px;
   -webkit-animation: buttonFadeInUp 1s ease;
@@ -161,7 +161,7 @@ body {
 /* Card */
 .card {
   position: relative;
-  background: #ffffff;
+  background: #3a3838;
   border-radius: 5px;
   padding: 60px 0 40px 0;
   box-sizing: border-box;
@@ -243,7 +243,7 @@ body {
 .card .input-container .bar:before, .card .input-container .bar:after {
   content: '';
   position: absolute;
-  background: #ed2553;
+  background: #423d3e;
   width: 0;
   height: 2px;
   -webkit-transition: .2s ease;
@@ -289,7 +289,7 @@ body {
   top: 50%;
   left: 50%;
   display: block;
-  background: #ed2553;
+  background: #756065;
   width: 30px;
   height: 30px;
   border-radius: 100%;
@@ -348,7 +348,7 @@ body {
 }
 .card.alt .toggle {
   position: relative;
-  background: #ed2553;
+  background: #685c5e;
   width: 140px;
   height: 140px;
   border-radius: 100%;

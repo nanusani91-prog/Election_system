@@ -1,54 +1,53 @@
 <?php
-	session_start();
-	require('../connection.php');
-	//If your session isn't valid, it returns you to the login screen for protection
-	if( empty($_SESSION['admin_id']) ){
-	   header("location:access-denied.php");
-	}
-	//retrive positions from the tbpositions table
-	$result=mysql_query("SELECT * FROM tbPositions")
-	or die("There are no records to display ... \n" . mysql_error()); 
-	if (mysql_num_rows($result)<1){
-	    $result = null;
-	}
-	?>
-	<?php
-	// inserting sql query
-	if (isset($_POST['Submit']))
-	{
+    session_start();
+    require('../connection.php');
 
-	$newPosition = addslashes( $_POST['position'] ); //prevents types of SQL injection
+    //If your session isn't valid, it returns you to the login screen for protection
+    if( empty($_SESSION['admin_id']) ){
+       header("location:access-denied.php");
+       exit; 
+    }
 
-	$sql = mysql_query( "INSERT INTO tbPositions(position_name) VALUES ('$newPosition')" )
-	        or die("Could not insert position at the moment". mysql_error() );
+    // Inserting Position
+    if (isset($_POST['Submit'])) {
+        $newPosition = $_POST['position'];
 
-	// redirect back to positions
-	   header("Location: positions.php");
-	}
+        // Secure Insert using Prepared Statements
+        $stmt = $mysqli->prepare("INSERT INTO tbpositions(position_name) VALUES (?)");
+        $stmt->bind_param("s", $newPosition);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            header("Location: positions.php");
+            exit;
+        } else {
+            die("Could not insert position at the moment: " . $mysqli->error);
+        }
+    }
+
+    // Deleting Position
+    if (isset($_GET['id'])) {
+        $id = (int)$_GET['id'];
+
+        // Secure Delete using Prepared Statements
+        $stmt = $mysqli->prepare("DELETE FROM tbpositions WHERE position_id=?");
+        $stmt->bind_param("i", $id);
+        if ($stmt->execute()) {
+            $stmt->close();
+            // redirect back to positions
+            header("Location: positions.php");
+            exit;
+        } else {
+            die("The position does not exist ... " . $mysqli->error);
+        }
+    }
+    $result = $mysqli->query("SELECT * FROM tbpositions");
+
+    if (!$result) {
+        die("There are no records to display ... \n" . $mysqli->error);
+    }
 ?>
-<?php
-	// deleting sql query
-	// check if the 'id' variable is set in URL
-	 if (isset($_GET['id']))
-	 {
-	 // get id value
-	 $id = $_GET['id'];
-	 
-	 // delete the entry
-	 $result = mysql_query("DELETE FROM tbPositions WHERE position_id='$id'")
-	 or die("The position does not exist ... \n"); 
-	 
-	 // redirect back to positions
-	 header("Location: positions.php");
-	 }
-	 else
-	 // do nothing
-    
-?>
-
-
 <!DOCTYPE html>
-
 <html>
 <head>
 <title>online voting</title>
@@ -57,15 +56,13 @@
 
 <link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 
-<script language="JavaScript" src="js/user.js">
-</script>
-
+<script language="JavaScript" src="js/user.js"></script>
 </head>
+
 <body id="top">
 
 <div class="wrapper row0">
-  <div id="topbar" class="hoc clear"> 
-    
+  <div id="topbar" class="hoc clear">
     <div class="fl_left">
       <ul class="faico clear">
         <li><a class="faicon-facebook" href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
@@ -79,21 +76,18 @@
     </div>
     <div class="fl_right">
       <ul class="nospace inline pushright">
-        <li><i class="fa fa-phone"></i> +8801773254014</li>
-        <li><i class="fa fa-envelope-o"></i> r.haque.249.rh@gmail.com </li>
+        <li><i class="fa fa-phone"></i> +251977325401</li>
+        <li><i class="fa fa-envelope-o"></i> group3@gmail.com </li>
       </ul>
     </div>
-    
   </div>
 </div>
 
 <div class="wrapper row1">
-  <header id="header" class="hoc clear"> 
-    
+  <header id="header" class="hoc clear">
     <div id="logo" class="fl_left">
       <h1><a href="index.php">ONLINE VOTING</a></h1>
     </div>
-    
     <nav id="mainav" class="fl_right">
       <ul class="clear">
         <li class="active"><a href="positions.php">Home</a></li>
@@ -105,67 +99,63 @@
             <li><a href="refresh.php">Results</a></li>
           </ul>
         </li>
-        
         <li><a href="http://localhost/online_voting/index.php">Voter Panel</a></li>
         <li><a href="logout.php">Logout</a></li>
-
       </ul>
     </nav>
-   
   </header>
 </div>
 
-<div >
-	<table width="380" align="center">
-	<CAPTION><h3>ADD NEW POSITION</h3></CAPTION>
-	<form name="fmPositions" id="fmPositions" action="positions.php" method="post" onsubmit="return positionValidate(this)">
-	<tr>
-	    <td bgcolor="#00ff80">Position Name</td>
-	    <td bgcolor="#808080"><input type="text" name="position" /></td>
-	    <td bgcolor="#00FF00"><input type="submit" name="Submit" value="Add" /></td>
-	</tr>
-	</table>
+<div>
+    <table width="380" align="center">
+        <CAPTION><h3>ADD NEW POSITION</h3></CAPTION>
+        <form name="fmPositions" id="fmPositions" action="positions.php" method="post" onsubmit="return positionValidate(this)">
+        <tr>
+            <td bgcolor="#00ff80">Position Name</td>
+            <td bgcolor="#808080"><input type="text" name="position" /></td>
+            <td bgcolor="#00FF00"><input type="submit" name="Submit" value="Add" /></td>
+        </tr>
+        </form>
+    </table>
 
-	<table border="0" width="420" align="center">
-		<CAPTION><h3>AVAILABLE POSITIONS</h3></CAPTION>
-		<tr>
-		<th>Position ID</th>
-		<th>Position Name</th>
-		</tr>
+    <table border="0" width="420" align="center">
+        <CAPTION><h3>AVAILABLE POSITIONS</h3></CAPTION>
+        <tr>
+            <th>Position ID</th>
+            <th>Position Name</th>
+            <th>Action</th>
+        </tr>
 
-		<?php
-			//loop through all table rows
-			while ($row=mysql_fetch_array($result)){
-			echo "<tr>";
-			echo "<td>" . $row['position_id']."</td>";
-			echo "<td>" . $row['position_name']."</td>";
-			echo '<td><a href="positions.php?id=' . $row['position_id'] . '">Delete Position</a></td>';
-			echo "</tr>";
-			}
-			mysql_free_result($result);
-			mysql_close($link);
-		?>
+        <?php
+            // Loop through all table rows
+            while ($row = $result->fetch_assoc()){
+                echo "<tr>";
+                // Using htmlspecialchars to prevent XSS attacks
+                echo "<td>" . htmlspecialchars($row['position_id']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['position_name']) . "</td>";
+                echo '<td><a href="positions.php?id=' . $row['position_id'] . '">Delete Position</a></td>';
+                echo "</tr>";
+            }
+            $result->free();
+            // $mysqli->close();
+        ?>
 
-	</table>
-	<hr>
+    </table>
+    <hr>
 </div>
 
-
-
 <div class="wrapper row4">
-  <footer id="footer" class="hoc clear"> 
-    
+  <footer id="footer" class="hoc clear">
     <div class="one_third first">
       <h6 class="title">Address</h6>
       <ul class="nospace linklist contact">
         <li><i class="fa fa-map-marker"></i>
           <address>
-         
           <p>
-          Name        : Md. Rezwanul Haque <br>
-          University  : KUET <br>
-          Batch       : 2k14 <br>
-          Dept        : CSE <br>
+          Name        : Group 3 <br>
+          University  : Debre Berhan <br>
+          Batch       : 3RD <br>
+          Dept        : IT <br>
           </p>
           </address>
         </li>
@@ -175,37 +165,29 @@
     <div class="one_third">
       <h6 class="title">Phone</h6>
       <ul class="nospace linklist contact">
-       
-        <li><i class="fa fa-phone"></i> +8801773254014<br>
-          +8801521479574</li>
-
-
+        <li><i class="fa fa-phone"></i> +251977325401<br>
+          +251977325401</li>
       </ul>
     </div>
 
     <div class="one_third">
       <h6 class="title">Email</h6>
       <ul class="nospace linklist contact">
-        
-        <li><i class="fa fa-envelope-o"></i> r.haque.249.rh@gmail.com </li>
-
+        <li><i class="fa fa-envelope-o"></i> group3@gmail.com </li>
       </ul>
     </div>
-
-
   </footer>
 </div>
 
 <div class="wrapper row5">
-  <div id="copyright" class="hoc clear"> 
-   
-    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="#">Md. Rezwanul Haque</a></p>
+  <div id="copyright" class="hoc clear">
+    <p class="fl_left">Copyright &copy; 2026 - All Rights Reserved - <a href="#">Group 3</a></p>
     <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
-    
   </div>
 </div>
-s
+
 <a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+
 <!-- JAVASCRIPTS -->
 <script src="layout/scripts/jquery.min.js"></script>
 <script src="layout/scripts/jquery.backtotop.js"></script>
@@ -215,4 +197,3 @@ s
 <!-- / IE9 Placeholder Support -->
 </body>
 </html>
-

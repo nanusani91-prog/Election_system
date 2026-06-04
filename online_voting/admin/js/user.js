@@ -1,190 +1,129 @@
-//function to handle login-form validation
-function loginValidate(loginForm){
+// --- EASY VALIDATION MODE ---
 
-var validationVerified=true;
-var errorMessage="";
-var okayMessage="click OK to continue";
+// function to handle login-form validation
+function loginValidate(loginForm) {
+    var errorMessage = "";
 
-if (loginForm.myusername.value=="")
-{
-errorMessage+="Email not filled!\n";
-validationVerified=false;
-}
-if(loginForm.mypassword.value=="")
-{
-errorMessage+="Password not filled!\n";
-validationVerified=false;
-}
-if (!isValidEmail(loginForm.myusername.value)) {
-errorMessage+="Invalid email address provided!\n";
-validationVerified=false;
-}
-if(!validationVerified)
-{
-alert(errorMessage);
-}
-if(validationVerified)
-{
-alert(okayMessage);
-}
-return validationVerified;
-}
+    if (loginForm.myusername.value == "") {
+        errorMessage += "Email not filled!\n";
+    }
+    if (loginForm.mypassword.value == "") {
+        errorMessage += "Password not filled!\n";
+    }
 
-//function to handle register-form validation
-function registerValidate(registerForm){
+    // Basic check: Email must contain '@'
+    if (!loginForm.myusername.value.includes('@') && loginForm.myusername.value !== "") {
+        errorMessage += "Invalid email address (must contain @).\n";
+    }
 
-    var validationVerified=true;
-    var errorMessage="";
-    var okayMessage="click OK to process registration";
-
-    if (registerForm.firstname.value=="")
-    {
-        errorMessage+="Firstname not filled!\n";
-        validationVerified=false;
-    }
-    if(registerForm.lastname.value=="")
-    {
-        errorMessage+="Lastname not filled!\n";
-        validationVerified=false;
-    }
-    if (registerForm.email.value=="")
-    {
-        errorMessage+="Email not filled!\n";
-        validationVerified=false;
-    }
-    if (registerForm.voter_id.value=="")
-    {
-        errorMessage+="Voter Id not filled!\n";
-        validationVerified=false;
-    }
-    if(registerForm.password.value=="")
-    {
-        errorMessage+="Password not provided!\n";
-        validationVerified=false;
-    }
-    if(registerForm.ConfirmPassword.value=="")
-    {
-        errorMessage+="Confirm password not filled!\n";
-        validationVerified=false;
-    }
-    if(registerForm.ConfirmPassword.value!=registerForm.password.value)
-    {
-        errorMessage+="Confirm password and password do not match!\n";
-        validationVerified=false;
-    }
-    if (!isValidEmail(registerForm.email.value)) {
-        errorMessage+="Invalid email address provided!\n";
-        validationVerified=false;
-    }
-    if (!isValidVoterId(registerForm.voter_id.value)) {
-        errorMessage+="Invalid Voter Id provided!\n";
-        validationVerified=false;
-    }
-    if(!validationVerified)
-    {
+    if (errorMessage !== "") {
         alert(errorMessage);
+        return false;
+    } else {
+        alert("Click OK to login");
+        return true;
     }
-    if(validationVerified)
-    {
-        alert(okayMessage);
-    }
-    return validationVerified;
 }
 
-//function to handle update-form validation
-function updateProfile(registerForm){
+// function to handle register-form validation
+function registerValidate(registerForm) {
+    var errorMessage = "";
 
-    var validationVerified=true;
-    var errorMessage="";
-    var okayMessage="click OK to update your account";
+    // Check empty fields
+    if (registerForm.firstname.value == "") {
+        errorMessage += "Firstname not filled!\n";
+    }
+    if (registerForm.lastname.value == "") {
+        errorMessage += "Lastname not filled!\n";
+    }
+    if (registerForm.email.value == "") {
+        errorMessage += "Email not filled!\n";
+    }
+    if (registerForm.voter_id.value == "") {
+        errorMessage += "Voter Id not filled!\n";
+    }
+    if (registerForm.password.value == "") {
+        errorMessage += "Password not provided!\n";
+    }
+    if (registerForm.ConfirmPassword.value == "") {
+        errorMessage += "Confirm password not filled!\n";
+    }
 
-    if (registerForm.firstname.value=="")
-    {
-    errorMessage+="Firstname not filled!\n";
-    validationVerified=false;
+    // Check if passwords match
+    if (registerForm.password.value !== registerForm.ConfirmPassword.value) {
+        errorMessage += "Passwords do not match!\n";
     }
-    if(registerForm.lastname.value=="")
-    {
-    errorMessage+="Lastname not filled!\n";
-    validationVerified=false;
+
+    // Basic email check (Must contain @)
+    if (!registerForm.email.value.includes('@') && registerForm.email.value !== "") {
+        errorMessage += "Invalid email address (must contain @).\n";
     }
-    if (registerForm.email.value=="")
-    {
-    errorMessage+="Email not filled!\n";
-    validationVerified=false;
+
+    if (errorMessage !== "") {
+        alert(errorMessage);
+        return false;
+    } else {
+        alert("Click OK to process registration");
+        return true;
     }
-    if(registerForm.password.value=="")
-    {
-    errorMessage+="New password not provided!\n";
-    validationVerified=false;
-    }
-    if(registerForm.ConfirmPassword.value=="")
-    {
-    errorMessage+="Confirm password not filled!\n";
-    validationVerified=false;
-    }
-    if(registerForm.ConfirmPassword.value!=registerForm.password.value)
-    {
-    errorMessage+="Confirm password and new password do not match!\n";
-    validationVerified=false;
-    }
-    if (!isValidEmail(registerForm.email.value)) {
-    errorMessage+="Invalid email address provided!\n";
-    validationVerified=false;
-    }
-    if(!validationVerified)
-    {
-    alert(errorMessage);
-    }
-    if(validationVerified)
-    {
-    alert(okayMessage);
-    }
-    return validationVerified;
 }
 
-//validate email function
+// function to handle update-profile validation
+function updateProfile(registerForm) {
+    var errorMessage = "";
+
+    if (registerForm.firstname.value == "") {
+        errorMessage += "Firstname not filled!\n";
+    }
+    if (registerForm.lastname.value == "") {
+        errorMessage += "Lastname not filled!\n";
+    }
+    if (registerForm.email.value == "") {
+        errorMessage += "Email not filled!\n";
+    }
+    if (registerForm.password.value == "") {
+        errorMessage += "New password not provided!\n";
+    }
+    if (registerForm.ConfirmPassword.value == "") {
+        errorMessage += "Confirm password not filled!\n";
+    }
+    if (registerForm.password.value !== registerForm.ConfirmPassword.value) {
+        errorMessage += "Passwords do not match!\n";
+    }
+
+    if (errorMessage !== "") {
+        alert(errorMessage);
+        return false;
+    } else {
+        alert("Click OK to update your account");
+        return true;
+    }
+}
+
+// Helper: Basic Email Check (Only checks for @)
 function isValidEmail(val) {
-    var re = /^[\w\+\'\.-]+@[\w\'\.-]+\.[a-zA-Z]{2,}$/;
-    if (!re.test(val)) {
-        return false;
-    }
-    return true;
+    // Simply returns true if it contains @ symbol
+    return val.includes('@');
 }
-//validate voter id
-function isValidVoterId(val){
-    // var length = 17;
-    // if (!re.test(val)) {
-    //     return false;
-    // }
-    // return true;
 
-    var len = val.toString().length;
-    if(len != 17){
-        return false;
-    }
+// Helper: Voter ID (Always true - removed strict rules)
+function isValidVoterId(val) {
     return true;
 }
 
-//validate special PIN
+// Helper: Special PIN (Always true - removed strict rules)
 function isValidSpecialPIN(val) {
-    var re = /^[0-9][0-9][A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$/;
-    if (!re.test(val)) {
-        return false;
-    }
     return true;
 }
 
-//validate special PIN length
-function isValidLength(val){
-    var length = 12;
-    if (!re.test(val)) {
-        return false;
-    }
+// Helper: Length (Always true - removed strict rules)
+function isValidLength(val) {
     return true;
 }
 
-// onchange of qty field entry totals the price
+
+// --- STANDARD ORDER / RESERVE FUNCTIONS (Unchanged) ---
+
 function getProductTotal(field) {
     clearErrorInfo();
     var form = field.form;
@@ -220,118 +159,94 @@ function doTotals(form) {
     form.elements['total'].value = formatDecimal(total);
 }
 
-//validate orderform
 function finalCheck(orderForm) {
-    var validationVerified=true;
-var errorMessage="";
-var okayMessage="click OK to process your order";
+    var validationVerified = true;
+    var errorMessage = "";
+    var okayMessage = "click OK to process your order";
 
-if (orderForm.quantity.value=="")
-{
-errorMessage+="Please provide a quantity.\n";
-validationVerified=false;
-}
-if (orderForm.quantity.value==0)
-{
-errorMessage+="Please provide a quantity rather than 0.\n";
-validationVerified=false;
-}
-if(orderForm.total.value=="")
-{
-errorMessage+="Total has not been calculated! Please provide first the quantity.\n";
-validationVerified=false;
-}
-if(!validationVerified)
-{
-alert(errorMessage);
-}
-if(validationVerified)
-{
-alert(okayMessage);
-}
-return validationVerified;
+    if (orderForm.quantity.value == "") {
+        errorMessage += "Please provide a quantity.\n";
+        validationVerified = false;
+    }
+    if (orderForm.quantity.value == 0) {
+        errorMessage += "Please provide a quantity rather than 0.\n";
+        validationVerified = false;
+    }
+    if (orderForm.total.value == "") {
+        errorMessage += "Total has not been calculated! Please provide first the quantity.\n";
+        validationVerified = false;
+    }
+    if (!validationVerified) {
+        alert(errorMessage);
+    }
+    if (validationVerified) {
+        alert(okayMessage);
+    }
+    return validationVerified;
 }
 
-//validate updateForm
 function updateValidate(updateForm) {
-    var validationVerified=true;
-var errorMessage="";
-var okayMessage="click OK to change your password";
+    var validationVerified = true;
+    var errorMessage = "";
+    var okayMessage = "click OK to change your password";
 
-if (updateForm.opassword.value=="")
-{
-errorMessage+="Please provide your old password.\n";
-validationVerified=false;
-}
-if (updateForm.npassword.value=="")
-{
-errorMessage+="Please provide a new password.\n";
-validationVerified=false;
-}
-if(updateForm.cpassword.value=="")
-{
-errorMessage+="Please confirm your new password.\n";
-validationVerified=false;
-}
-if(updateForm.cpassword.value!=updateForm.npassword.value)
-{
-errorMessage+="Confirm password and new password do not match!\n";
-validationVerified=false;
-}
-if(!validationVerified)
-{
-alert(errorMessage);
-}
-if(validationVerified)
-{
-alert(okayMessage);
-}
-return validationVerified;
+    if (updateForm.opassword.value == "") {
+        errorMessage += "Please provide your old password.\n";
+        validationVerified = false;
+    }
+    if (updateForm.npassword.value == "") {
+        errorMessage += "Please provide a new password.\n";
+        validationVerified = false;
+    }
+    if (updateForm.cpassword.value == "") {
+        errorMessage += "Please confirm your new password.\n";
+        validationVerified = false;
+    }
+    if (updateForm.cpassword.value != updateForm.npassword.value) {
+        errorMessage += "Confirm password and new password do not match!\n";
+        validationVerified = false;
+    }
+    if (!validationVerified) {
+        alert(errorMessage);
+    }
+    if (validationVerified) {
+        alert(okayMessage);
+    }
+    return validationVerified;
 }
 
+function reserveValidate(reserveForm) {
+    var validationVerified = true;
+    var errorMessage = "";
+    var okayMessage = "click OK to reserve this table";
 
-//validate reserve form
-function reserveValidate(reserveForm){
-
-var validationVerified=true;
-var errorMessage="";
-var okayMessage="click OK to reserve this table";
-
-if (reserveForm.tNumber.selectedIndex==0)
-{
-errorMessage+="Please select a table by its number!\n";
-validationVerified=false;
-}
-if(!validationVerified)
-{
-alert(errorMessage);
-}
-if(validationVerified)
-{
-alert(okayMessage);
-}
-return validationVerified;
+    if (reserveForm.tNumber.selectedIndex == 0) {
+        errorMessage += "Please select a table by its number!\n";
+        validationVerified = false;
+    }
+    if (!validationVerified) {
+        alert(errorMessage);
+    }
+    if (validationVerified) {
+        alert(okayMessage);
+    }
+    return validationVerified;
 }
 
-//validate position form
-function positionValidate(positionForm){
+function positionValidate(positionForm) {
+    var validationVerified = true;
+    var errorMessage = "";
+    var okayMessage = "click OK to see the candidates under the chosen position";
 
-var validationVerified=true;
-var errorMessage="";
-var okayMessage="click OK to see the candidates under the chosen position";
-
-if (positionForm.position.selectedIndex == 0)
-{
-errorMessage+="Position not set!\n";
-validationVerified=false;
-}
-if(!validationVerified)
-{
-alert(errorMessage);
-}
-if(validationVerified)
-{
-alert(okayMessage);
-}
-return validationVerified;
+    if (positionForm.position.selectedIndex == 0) {
+        errorMessage += "Position not set!\n";
+        validationVerified = false;
+    }
+    if (!validationVerified) {
+        alert(errorMessage);
+    }
+    if (validationVerified) {
+        alert(okayMessage);
+    }
+    return validationVerified;
 }

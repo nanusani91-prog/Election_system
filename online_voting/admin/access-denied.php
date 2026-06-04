@@ -16,7 +16,7 @@
 
   
 </head>
-<body style="background-image:url('images/demo/backgrounds/access2.jpg');">
+<body style="background-image:url('images/demo/backgrounds/wellcome.png');">
 
 <div class="pen-title">
   <h1 style="color:white;"> Online Voting System Access Denied </h1>

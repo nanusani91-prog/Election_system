@@ -1,27 +1,17 @@
-
 <?php
-    session_start();
-    require('../connection.php');
-    $log1 = $_SESSION['log1'];
-?>
-<?php
-      if(isset($_COOKIE['$email']) && $_COOKIE['$pass']){
-            $curnam = $_SESSION['curname'];
-            $curpas = $_SESSION['curpass'];
-        }
-        else if($log1 == 11)
-        {
-            $curnam = $_SESSION['curname'];
-            $curpas = $_SESSION['curpass'];
-        }
-        else 
-        {
-           echo '<img src="e1.jpg" width="100%" height="100%"  />';  /* here goes the page when destroy the cookies */
-           exit;
-        }
-?>
+session_start();
+require('../connection.php');
 
+$log1 = $_SESSION['log1'] ?? null;
 
+if ((isset($_COOKIE['email']) && isset($_COOKIE['pass'])) || ($log1 === 11)) {
+    $curnam = $_SESSION['curname'] ?? null;
+    $curpas = $_SESSION['curpass'] ?? null;
+} else {
+    echo '<img src="wellcome.png" width="100%" height="100%" />';
+    exit;
+}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -52,8 +42,8 @@
     </div>
     <div class="fl_right">
       <ul class="nospace inline pushright">
-        <li><i class="fa fa-phone"></i> +8801773254014</li>
-        <li><i class="fa fa-envelope-o"></i> r.haque.249.rh@gmail.com </li>
+        <li><i class="fa fa-phone"></i> +251921479574</li>
+        <li><i class="fa fa-envelope-o"></i> group3@gmail.com </li>
       </ul>
     </div>
   </div>
@@ -75,15 +65,13 @@
             <li><a href="refresh.php">Results</a></li>
           </ul>
         </li>
-        
-        <li><a href="http://localhost/online_voting/index.php">Voter Panel</a></li>
         <li><a href="logout.php">Logout</a></li>
 
       </ul>
     </nav>
   </header>
 </div>
-<div class="wrapper bgded overlay" style="background-image:url('images/demo/backgrounds/background1.jpg');">
+<div class="wrapper bgded overlay" style="background-image:url('images/demo/backgrounds/wellcome.png');">
   <section id="testimonials" class="hoc container clear"> 
    
     <h2 class="font-x3 uppercase btmspace-80 underlined"> Online <a href="#">Voting</a></h2>
@@ -108,12 +96,11 @@
       <ul class="nospace linklist contact">
         <li><i class="fa fa-map-marker"></i>
           <address>
-         
           <p>
-          Name        : Md. Rezwanul Haque <br>
-          University  : KUET <br>
-          Batch       : 2k14 <br>
-          Dept        : CSE <br>
+          Name        : Group 3 <br>
+          University  : Debre Berhan <br>
+          Batch       : 3RD <br>
+          Dept        : IT <br>
           </p>
           </address>
         </li>
@@ -124,8 +111,8 @@
       <h6 class="title">Phone</h6>
       <ul class="nospace linklist contact">
        
-        <li><i class="fa fa-phone"></i> +8801773254014<br>
-          +8801521479574</li>
+        <li><i class="fa fa-phone"></i> +251921479574<br>
+          +251921479574</li>
 
 
       </ul>
@@ -135,7 +122,7 @@
       <h6 class="title">Email</h6>
       <ul class="nospace linklist contact">
         
-        <li><i class="fa fa-envelope-o"></i> r.haque.249.rh@gmail.com </li>
+        <li><i class="fa fa-envelope-o"></i> group3@gmail.com </li>
 
       </ul>
     </div>
@@ -145,7 +132,7 @@
 
 <div class="wrapper row5">
   <div id="copyright" class="hoc clear"> 
-    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="#">Md. Rezwanul Haque</a></p>
+    <p class="fl_left">Copyright &copy; 2026 - All Rights Reserved - <a href="#">Group 3</a></p>
     <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
   </div>
 </div>

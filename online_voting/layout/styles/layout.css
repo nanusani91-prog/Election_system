@@ -1,18 +1,7 @@
 @charset "utf-8";
-/*
-Template Name: Ligerrat
-Author: <a href="http://www.os-templates.com/">OS Templates</a>
-Author URI: http://www.os-templates.com/
-Licence: Free to use under our free template licence terms
-Licence URI: http://www.os-templates.com/template-terms
-File: Layout CSS
-*/
-
 @import url("fontawesome-4.5.0.min.css");
 @import url("framework.css");
 
-/* Rows
---------------------------------------------------------------------------------------------------------------- */
 .row0, .row0 a{}
 .row1, .row1 a{}
 .row2, .row2 a{}
@@ -20,25 +9,44 @@ File: Layout CSS
 .row4, .row4 a{}
 .row5, .row5 a{}
 
-
-/* Top Bar
---------------------------------------------------------------------------------------------------------------- */
-#topbar{padding:5px 0; font-size:12px;}
+/* Top Bar */
+#topbar{
+  padding:5px 0;
+  font-size:12px;
+  background-color: #141414; /* Dark Background */
+  color: #CCCCCC; /* Light Grey Text */
+}
 
 #topbar .fl_right{margin-top:4px;}
 #topbar .fl_right .inline > li i{margin:0 5px 0 0; line-height:normal;}
 
-
-/* Header
---------------------------------------------------------------------------------------------------------------- */
-#header{padding:30px 0 0 0;}
-
-#header #logo{margin-top:;}
-#header #logo h1{margin:0; padding:0; font-size:22px; text-transform:uppercase;}
+/* Make Top Bar Links Blue */
+#topbar a { color: #56AED4; }
 
 
-/* Page Intro
---------------------------------------------------------------------------------------------------------------- */
+/* Header */
+#header{
+  padding:30px 0 0 0;
+  background-color: #070101; 
+  border-bottom: 5px solid #56AED4; /* Blue Accent Line at bottom */
+}
+
+#header #logo{margin-top:0;} /* FIXED THE SYNTAX ERROR HERE */
+
+#header #logo h1{
+  margin:0;
+  padding:0;
+  font-size:22px;
+  text-transform:uppercase;
+  color: #141414; /* Dark Logo Text */
+  font-weight: bold;
+}
+
+/* Make the Logo Link Blue */
+#header #logo a { 
+  color: #56AED4; 
+}
+
 #pageintro{padding:150px 0;}
 
 #pageintro .introtxt{display:block; float:right; max-width:50%;}
@@ -46,15 +54,11 @@ File: Layout CSS
 #pageintro .introtxt p{margin-bottom:30px; font-size:16px;}
 
 
-/* Content Area
---------------------------------------------------------------------------------------------------------------- */
 .container{padding:80px 0;}
 
-/* Content */
 .container .content{}
 
-/* Elements */
-.elements li:last-child{margin-bottom:0;}/* Used for mobile devices when elements stack */
+.elements li:last-child{margin-bottom:0;}
 .elements article{display:inline-block; width:100%; max-width:320px; height:100%;}
 .elements .txtwrap{padding:20px;}
 .elements .txtwrap .heading{margin-bottom:0;}
@@ -63,7 +67,7 @@ File: Layout CSS
 .elements .txtwrap p:last-child{margin-bottom:0;}
 .elements .txtwrap footer{}
 
-/* Comments */
+
 #comments ul{margin:0 0 40px 0; padding:0; list-style:none;}
 #comments li{margin:0 0 10px 0; padding:15px;}
 #comments .avatar{float:right; margin:0 0 10px 10px; padding:3px; border:1px solid;}
@@ -78,18 +82,15 @@ File: Layout CSS
 #comments div{margin-bottom:15px;}
 #comments input[type="submit"], #comments input[type="reset"]{display:inline-block; width:auto; min-width:150px; margin:0; padding:8px 5px; cursor:pointer;}
 
-/* Sidebar */
+
 .container .sidebar{}
 
 .sidebar .sdb_holder{margin-bottom:50px;}
 .sidebar .sdb_holder:last-child{margin-bottom:0;}
 
-
-/* Testimonials
---------------------------------------------------------------------------------------------------------------- */
 #testimonials{}
 #testimonials li{}
-#testimonials li:last-child{margin-bottom:0;}/* Used in mobile devices */
+#testimonials li:last-child{margin-bottom:0;}
 #testimonials li blockquote{display:block; position:relative; width:100%; margin:0 0 30px 0; padding:30px; line-height:1.4; z-index:1;}
 #testimonials li blockquote::before{display:block; position:absolute; top:-15px; left:15px; padding:0 8px; font-family:"FontAwesome"; font-size:22px; content:"\f10d";}
 #testimonials li blockquote::after{display:block; position:absolute; bottom:0; left:25px; margin-bottom:-18px; content:""; border:solid; border-width:18px 0 18px 18px; border-color:transparent;}
@@ -102,8 +103,6 @@ File: Layout CSS
 #testimonials li figure figcaption em{font-size:.8rem;}
 
 
-/* Footer
---------------------------------------------------------------------------------------------------------------- */
 #footer{padding:80px 0;}
 
 #footer .title{margin:0 0 50px 0; padding:0; font-size:1.2rem; text-transform:uppercase;}
@@ -118,34 +117,17 @@ File: Layout CSS
 #footer .contact li *{margin:0; padding:0; line-height:1.6;}
 #footer .contact li i{display:block; position:absolute; top:0; left:0; width:30px; font-size:16px; text-align:center;}
 
-
-/* Copyright
---------------------------------------------------------------------------------------------------------------- */
 #copyright{padding:20px 0;}
 #copyright *{margin:0; padding:0;}
 
-
-/* Transition Fade
---------------------------------------------------------------------------------------------------------------- */
 *, *::before, *::after{transition:all .3s ease-in-out;}
 #mainav form *{transition:none !important;}
 
-
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-
-
-/* Navigation
---------------------------------------------------------------------------------------------------------------- */
 nav ul, nav ol{margin:0; padding:0; list-style:none;}
 
 #mainav, #breadcrumb, .sidebar nav{line-height:normal;}
 #mainav .drop::after, #mainav li li .drop::after, #breadcrumb li a::after, .sidebar nav a::after{position:absolute; font-family:"FontAwesome"; font-size:10px; line-height:10px;}
 
-/* Top Navigation */
 #mainav{}
 #mainav ul.clear{margin-top:3px;}
 #mainav ul{text-transform:uppercase;}
@@ -169,7 +151,6 @@ nav ul, nav ol{margin:0; padding:0; list-style:none;}
 #mainav form select{width:100%; padding:5px; border:1px solid;}
 #mainav form select option{margin:5px; padding:0; border:none;}
 
-/* Breadcrumb */
 #breadcrumb{padding:15px 0; text-transform:uppercase;}
 #breadcrumb ul{margin:0; padding:0; list-style:none;}
 #breadcrumb li{display:inline-block; margin:0 6px 0 0; padding:0;}
@@ -178,7 +159,6 @@ nav ul, nav ol{margin:0; padding:0; list-style:none;}
 #breadcrumb li:last-child a{margin:0; padding:0;}
 #breadcrumb li:last-child a::after{display:none;}
 
-/* Sidebar Navigation */
 .sidebar nav{display:block; width:100%;}
 .sidebar nav li{margin:0 0 3px 0; padding:0;}
 .sidebar nav a{display:block; position:relative; margin:0; padding:5px 10px 5px 15px; text-decoration:none; border:solid; border-width:0 0 1px 0;}
@@ -188,37 +168,26 @@ nav ul, nav ol{margin:0; padding:0; list-style:none;}
 .sidebar nav ul ul ul a{padding-left:55px;}
 .sidebar nav ul ul ul a::after{left:45px;}
 
-/* Pagination */
 .pagination{display:block; width:100%; text-align:center; clear:both;}
 .pagination li{display:inline-block; margin:0 2px 0 0;}
 .pagination li:last-child{margin-right:0;}
 .pagination a, .pagination strong{display:block; padding:8px 11px; border:1px solid; background-clip:padding-box; font-weight:normal;}
 
-/* Back to Top */
 #backtotop{z-index:999; display:inline-block; position:fixed; visibility:hidden; bottom:20px; right:20px; width:36px; height:36px; line-height:36px; font-size:16px; text-align:center; opacity:.2;}
 #backtotop i{display:block; width:100%; height:100%; line-height:inherit;}
 #backtotop.visible{visibility:visible; opacity:.5;}
 #backtotop:hover{opacity:1;}
 
-
-/* Tables
---------------------------------------------------------------------------------------------------------------- */
 table, th, td{border:1px solid; border-collapse:collapse; vertical-align:top;}
 table, th{table-layout:auto;}
 table{width:100%; margin-bottom:15px;}
 th, td{padding:5px 8px;}
 td{border-width:0 1px;}
 
-
-/* Gallery
---------------------------------------------------------------------------------------------------------------- */
 #gallery{display:block; width:100%; margin-bottom:50px;}
 #gallery figure figcaption{display:block; width:100%; clear:both;}
 #gallery li{margin-bottom:30px;}
 
-
-/* Font Awesome Social Icons
---------------------------------------------------------------------------------------------------------------- */
 .faico{margin:0; padding:0; list-style:none;}
 .faico li{display:inline-block; float:left; margin:0 12px 0 0; padding:0; line-height:normal;}
 .faico li:last-child{margin-right:0;}
@@ -234,16 +203,6 @@ td{border-width:0 1px;}
 .faicon-rss:hover{color:#EE802F;}
 .faicon-twitter:hover{color:#00ACEE;}
 
-
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-
-
-/* Colours
---------------------------------------------------------------------------------------------------------------- */
 body{color:#888888; background-color:#141414;}
 a{color:#56AED4;}
 a:active, a:focus{background:transparent;}/* IE10 + 11 Bugfix - prevents grey background */
@@ -264,8 +223,6 @@ article:hover .icon::before, article:hover .icon::after{}
 .underlined::after{color:#D7D7D7; background-color:#FFFFFF;}
 .bgded .underlined::after{background-color:#000000;}
 
-
-/* Rows */
 .row0{color:#888888; background-color:#FFFFFF;}
 .row1{color:#FFFFFF; background-color:#141414;}
 .row2{color:#888888; background-color:#F4F4F4;}
@@ -276,27 +233,17 @@ article:hover .icon::before, article:hover .icon::after{}
 .row2 .underlined::after{background-color:#F4F4F4;}
 .row4 .underlined::after{background-color:#292929;}
 
-
-/* Header */
 #header #logo *{color:inherit;}
 
-
-/* Content Area */
 .elements article{color:#888888; background-color:#FFFFFF; box-shadow:0px 2px 5px rgba(0,0,0,.1);}
 
-
-/* Testimonials */
 #testimonials li blockquote{color:#FFFFFF; background-color:rgba(41,41,41,.5);}/* #292929 */
 #testimonials li blockquote::before{color:#888888; background-color:#141414;}
 #testimonials li blockquote::after{border-left-color:rgba(41,41,41,.5);}
 
-
-/* Footer */
 #footer .title{color:#888888;}
 #footer .linklist li{border-color:#141414;}
 
-
-/* Navigation */
 #mainav li a{color:inherit;}
 #mainav .active a, #mainav a:hover, #mainav li:hover > a{color:#5B9BBD; background-color:inherit;}
 #mainav li li a, #mainav .active li a{color:#FFFFFF; background-color:rgba(0,0,0,.6); border-color:rgba(0,0,0,.6);}
@@ -314,8 +261,6 @@ article:hover .icon::before, article:hover .icon::after{}
 
 #backtotop{color:#FFFFFF; background-color:#56AED4;}
 
-
-/* Tables + Comments */
 table, th, td, #comments .avatar, #comments input, #comments textarea{border-color:#D7D7D7;}
 #comments input:focus, #comments textarea:focus, #comments *:required:focus{border-color:#56AED4;}
 th{color:#FFFFFF; background-color:#373737;}
@@ -323,28 +268,12 @@ tr, #comments li, #comments input[type="submit"], #comments input[type="reset"]{
 tr:nth-child(even), #comments li:nth-child(even){color:inherit; background-color:#F7F7F7;}
 table a, #comments a{background-color:inherit;}
 
-
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------ */
-
-
-/* Media Queries
---------------------------------------------------------------------------------------------------------------- */
 @-ms-viewport{width:device-width;}
 
-
-/* Max Wrapper Width - Laptop, Desktop etc.
---------------------------------------------------------------------------------------------------------------- */
 @media screen and (min-width:978px){
 	.hoc{max-width:978px;}
 }
 
-
-/* Mobile Devices
---------------------------------------------------------------------------------------------------------------- */
 @media screen and (max-width:900px){
 	.hoc{max-width:90%;}
 
@@ -374,7 +303,7 @@ table a, #comments a{background-color:inherit;}
 	.fl_left, .fl_right{display:block; float:none;}
 	.one_half, .one_third, .two_third, .one_quarter, .two_quarter, .three_quarter{display:block; float:none; width:auto; margin:0 0 30px 0; padding:0;}
 
-	#topbar{padding:10px 0 15px; text-align:center;}
+	#topbar{padding:10px 0 15px; text-align:center;  color:blue;}
 	#topbar .faico li{float:none;}
 	#topbar .fl_right ul{margin:0; line-height:normal;}
 	#topbar .fl_right ul li{display:inline-block; margin-right:20px;}
@@ -391,9 +320,6 @@ table a, #comments a{background-color:inherit;}
 
 @media screen and (max-width:450px){}
 
-
-/* Other
---------------------------------------------------------------------------------------------------------------- */
 @media screen and (max-width:650px){
 	.scrollable{display:block; width:100%; margin:0 0 30px 0; padding:0 0 15px 0; overflow:auto; overflow-x:scroll;}
 	.scrollable table{margin:0; padding:0; white-space:nowrap;}
@@ -403,4 +329,4 @@ table a, #comments a{background-color:inherit;}
 
 	.font-x2{font-size:1.4rem;}
 	.font-x3{font-size:1.6rem;}
-}
+}   

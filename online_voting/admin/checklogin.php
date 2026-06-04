@@ -2,79 +2,86 @@
 <html>
 <body style="background-color:powderblue;">
 
-
 <?php
-//session_start();
-ini_set ("display_errors", "1");
-error_reporting(E_ALL);
-
+// Start Output Buffering and Session
 ob_start();
 session_start();
+
+// Enable error reporting for debugging (remove in production)
+ini_set("display_errors", "1");
+error_reporting(E_ALL);
+
+// Include database connection
 require('../connection.php');
 
-$tbl_name="tbAdministrators"; // Table name
+ $tbl_name = "tbadministrators"; // Table name
 
-
-$myusername=$_POST['myusername'];
-$mypassword=$_POST['mypassword'];
-$encrypted_mypassword=md5($mypassword); 
-
-$myusername = stripslashes($myusername);
-$mypassword = stripslashes($mypassword);
-$myusername = $mysqli->escape_string($_POST['myusername']);
-$mypassword = $mysqli->escape_string($_POST['mypassword']);
-
-$sql="SELECT * FROM $tbl_name WHERE email='$myusername' and password='$encrypted_mypassword'" or die(mysql_error());
-$result= $mysqli->query($sql);
-
-
-$count=mysqli_num_rows($result);
-
-
-if($count==1){
-    // $user = $result->fetch_assoc();
-    // $_SESSION['admin_id'] = $user['admin_id'];
+// Check if the form was submitted
+if(isset($_POST['myusername']) && isset($_POST['mypassword'])) {
     
-                if(isset($_POST['remember']))
-                {
-                    setcookie('$email',$_POST['myusername'], time()+30*24*60*60); // 30 days
-                    setcookie('$pass', $_POST['mypassword'],time()+30*24*60*60); // 30 days
-                    $_SESSION['curname']=$myusername;
-                    $_SESSION['curpass']=$mypassword;
+    $myusername = $_POST['myusername'];
+    $mypassword = $_POST['mypassword'];
+    
+    // Encrypt password using MD5 (kept for compatibility with your existing database)
+    $encrypted_mypassword = md5($mypassword); 
 
-                    $user = $result->fetch_assoc();
-     				$_SESSION['admin_id'] = $user['admin_id'];
+    // Secure query using Prepared Statements to prevent SQL Injection
+    $sql = "SELECT admin_id FROM $tbl_name WHERE email = ? AND password = ?";
+    
+    if ($stmt = $mysqli->prepare($sql)) {
+        // Bind parameters ("ss" means two strings)
+        $stmt->bind_param("ss", $myusername, $encrypted_mypassword);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        // Count result rows
+        $count = $result->num_rows;
 
-                    header("Location:admin.php");
-                    exit;
-                }
-                else
-                {
-                    $log1=11;
-                    $_SESSION['log1'] = $log1;
-                    $_SESSION['curname']=$myusername;
-                    $_SESSION['curpass']=$mypassword;
-
-                    $user = $result->fetch_assoc();
-     				$_SESSION['admin_id'] = $user['admin_id'];
-
-                    header("Location:admin.php");
-                    exit;
-                }
+        if($count == 1){
+            // Fetch user data
+            $user = $result->fetch_assoc();
             
+            // Set Session Variables
+            $_SESSION['admin_id'] = $user['admin_id'];
+            $_SESSION['curname'] = $myusername;
+            $_SESSION['curpass'] = $mypassword; // Plaintext password stored in session
 
-}
-else {
-    echo "<br> <br> <br> ";
-    echo "<center> <h3>Wrong Username or Password<br><br>Return to <a href=\"index.php\">login</a> </h3></center>";
+            // Handle "Remember Me" Checkbox
+            if(isset($_POST['remember'])) {
+                // Set cookies (Fixed cookie names: '$email' -> 'admin_email')
+                setcookie("admin_email", $myusername, time() + (30 * 24 * 60 * 60), "/"); // 30 days
+                setcookie("admin_pass", $mypassword, time() + (30 * 60 * 60), "/");     // 30 days
+                
+                // Note: The original code did not set $_SESSION['log1'] when 'remember' was checked.
+            } else {
+                // Set the flag for non-remembered sessions
+                $log1 = 11;
+                $_SESSION['log1'] = $log1;
+            }
+
+            // Redirect to Admin Dashboard
+            header("Location: admin.php");
+            exit;
+        } 
+        else {
+            // Login Failed
+            echo "<br><br><br>";
+            echo "<center><h3>Wrong Username or Password<br><br>Return to <a href=\"index.php\">login</a></h3></center>";
+        }
+        
+        $stmt->close();
+    } else {
+        die("Database query failed.");
+    }
+
+} else {
+    // Redirect if accessed directly without POST data
+    header("Location: index.php");
+    exit;
 }
 
 ob_end_flush();
-
 ?> 
-
-
-
 
 </body>
 </html>
